@@ -1,0 +1,18 @@
+ul {
+	padding-left: 25px;
+	text-align: left;
+}
+li {
+	text-align: left;
+	list-style: none;
+	text-decoration: none;
+}
+.app {
+	text-align: center;
+	font-weight: 900;
+	font-size: 24px;
+	color: #000;
+	border: 1px solid #000;
+	border-radius: 15px;
+	background-color: #ff019f;
+}
