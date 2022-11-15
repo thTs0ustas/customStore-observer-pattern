@@ -1,12 +1,13 @@
-// import React from 'react';
-
 import { useSyncExternalStore } from 'react';
 
 type Listener = <U>(prev: U) => void;
+type Selector<S, U> = (state: S) => U;
 
 const createStore = <T>(initState: T) => {
 	let currentState = initState;
+
 	const listeners = new Set<Listener>();
+
 	const subscribe = (listener: Listener) => {
 		listeners.add(listener);
 		return () => listeners.delete(listener);
@@ -17,13 +18,8 @@ const createStore = <T>(initState: T) => {
 			currentState = newState;
 			listeners.forEach((listener) => listener(currentState));
 		},
-		subscribe: (listener: Listener) => {
-			listeners.add(listener);
-			return () => listeners.delete(listener);
-		},
-		useStore: <U>(selector: (state: T) => U): U => {
-			return useSyncExternalStore(subscribe, () => selector(currentState));
-		}
+		useStore: <U>(selector: Selector<T, U>): U =>
+			useSyncExternalStore(subscribe, () => selector(currentState))
 	};
 };
 

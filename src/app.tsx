@@ -1,32 +1,22 @@
 // import { /* useEffect, useState, */  } from 'react';
 import './app.css';
-import store, { State } from './store';
-
-// const useStore = (selector: (state: State) => number) => {
-// 	return useSyncExternalStore(store.subscribe, () =>
-// 		selector(store.getState())
-// 	);
-// 	// const [state, setState] = useState(selector(store.getState()));
-// 	// useEffect(() => {
-// 	// 	store.subscribe((prev) => setState(selector(prev)));
-// 	// }, []);
-// 	// return state;
-// };
+import store, { State } from './store/store';
+import { itemSelector } from 'model/selectors';
 
 type Props = { item: keyof State };
-const IncrementValue = ({ item }: Props) => (
-	<button
-		onClick={() => {
-			const state = store.getState();
-			store.setState({ ...state, [item]: state[item] + 1 });
-		}}
-	>
-		Increment {item}
-	</button>
-);
+
+const IncrementValue = ({ item }: Props) => {
+	const handleClick = () => {
+		const { getState, setState } = store;
+		const state = getState();
+		setState({ ...state, [item]: state[item] + 1 });
+	};
+
+	return <button onClick={handleClick}>Increment {item}</button>;
+};
 
 const ShowValue = ({ item }: Props) => {
-	const state = store.useStore((prevState) => prevState[item]);
+	const state = store.useStore(itemSelector(item));
 	console.log(state);
 
 	return <span>{state}</span>;
