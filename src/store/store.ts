@@ -42,5 +42,3 @@ const createStore = <T>(initState: T) => {
 const store = createStore({ value1: 0, value2: 0 });
 export const { useSelector, useDispatch } = store;
 export type State = ReturnType<typeof store.getState>;
-
-export default store;
