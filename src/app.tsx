@@ -1,19 +1,32 @@
 import './app.css';
-import { State, useDispatch, useSelector } from './store/store';
-import { itemSelector } from 'model/counterReducers/selectors';
+import { counter$, RootState, subject$ } from 'src/store/counter';
+import { useEffect, useState } from 'react';
 
-type Props = { item: keyof State };
+type Props = { item: 'value1' | 'value2' };
 
 const IncrementValue = ({ item }: Props) => {
-	const handleClick = () => {
-		useDispatch({ type: 'add', payload: item });
-	};
-	return <button onClick={handleClick}>Increment {item}</button>;
+	return (
+		<button
+			onClick={() =>
+				subject$.next({
+					...subject$.value,
+					[item]: subject$.value[item] + +item.at(-1)!
+				})
+			}
+		>
+			Increment {item}
+		</button>
+	);
 };
 
 const ShowValue = ({ item }: Props) => {
-	const state = useSelector(itemSelector(item));
-	return <span>{state}</span>;
+	const [counter, setCounter] = useState({} as RootState);
+	useEffect(() => {
+		const sub = counter$.subscribe(setCounter);
+		return () => sub.unsubscribe();
+	}, []);
+
+	return <span>{counter[item]}</span>;
 };
 
 const App = () => (
