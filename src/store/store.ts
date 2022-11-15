@@ -3,6 +3,7 @@ import { counterReducer } from '../model';
 
 type Listener = <U>(prev: U) => void;
 type Selector<S, U> = (state: S) => U;
+
 export interface Action {
 	type: string;
 }
@@ -22,7 +23,6 @@ const createStore = <T>(initState: T) => {
 	};
 
 	const setState = (action: AnyAction) => {
-		// @ts-ignore
 		currentState = counterReducer(currentState, action);
 		console.log(currentState);
 		listeners.forEach((listener) => listener(currentState));
