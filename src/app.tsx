@@ -1,20 +1,17 @@
 import './app.css';
-import store, { State } from './store/store';
+import { State, useDispatch, useSelector } from './store/store';
 import { itemSelector } from 'model/counterReducers/selectors';
 
 type Props = { item: keyof State };
 
 const IncrementValue = ({ item }: Props) => {
 	const handleClick = () => {
-		const { dispatch } = store;
-		dispatch({ type: 'add', payload: item });
+		useDispatch({ type: 'add', payload: item });
 	};
-
 	return <button onClick={handleClick}>Increment {item}</button>;
 };
 
 const ShowValue = ({ item }: Props) => {
-	const { useSelector } = store;
 	const state = useSelector(itemSelector(item));
 	return <span>{state}</span>;
 };

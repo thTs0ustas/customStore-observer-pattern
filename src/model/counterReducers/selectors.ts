@@ -1,6 +1,8 @@
+import { State } from 'src/store/store';
+
 const itemSelector =
-	<S, I extends keyof S>(item: I) =>
-	(state: S) =>
+	<I extends keyof State>(item: I) =>
+	(state: State) =>
 		state[item];
 
 export { itemSelector };
