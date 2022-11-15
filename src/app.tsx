@@ -1,24 +1,21 @@
-// import { /* useEffect, useState, */  } from 'react';
 import './app.css';
 import store, { State } from './store/store';
-import { itemSelector } from 'model/selectors';
+import { itemSelector } from 'model/counterReducers/selectors';
 
 type Props = { item: keyof State };
 
 const IncrementValue = ({ item }: Props) => {
 	const handleClick = () => {
-		const { getState, setState } = store;
-		const state = getState();
-		setState({ ...state, [item]: state[item] + 1 });
+		const { dispatch } = store;
+		dispatch({ type: 'add', payload: item });
 	};
 
 	return <button onClick={handleClick}>Increment {item}</button>;
 };
 
 const ShowValue = ({ item }: Props) => {
-	const state = store.useStore(itemSelector(item));
-	console.log(state);
-
+	const { useSelector } = store;
+	const state = useSelector(itemSelector(item));
 	return <span>{state}</span>;
 };
 

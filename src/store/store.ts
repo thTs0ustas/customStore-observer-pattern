@@ -1,7 +1,15 @@
 import { useSyncExternalStore } from 'react';
+import { counterReducer } from '../model';
 
 type Listener = <U>(prev: U) => void;
 type Selector<S, U> = (state: S) => U;
+interface Action {
+	type: string;
+}
+
+export interface AnyAction extends Action {
+	[extraProps: string]: any;
+}
 
 const createStore = <T>(initState: T) => {
 	let currentState = initState;
@@ -12,14 +20,20 @@ const createStore = <T>(initState: T) => {
 		listeners.add(listener);
 		return () => listeners.delete(listener);
 	};
+
+	const setState = (action: AnyAction) => {
+		currentState = counterReducer(currentState, action);
+		listeners.forEach((listener) => listener(currentState));
+	};
+
 	return {
 		getState: () => currentState,
-		setState: (newState: T) => {
-			currentState = newState;
-			listeners.forEach((listener) => listener(currentState));
+		useSelector: <U>(selector: Selector<T, U>): U =>
+			useSyncExternalStore(subscribe, () => selector(currentState)),
+		dispatch: (action: AnyAction) => {
+			setState(action);
 		},
-		useStore: <U>(selector: Selector<T, U>): U =>
-			useSyncExternalStore(subscribe, () => selector(currentState))
+		setState
 	};
 };
 
